@@ -97,6 +97,12 @@ vim.g.have_nerd_font = false
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
+--
+-- #### mwilson options begin ####
+vim.o.expandtab = true
+vim.o.shiftwidth = 4
+vim.o.smartindent = true
+-- #### mwilson options end ####
 
 -- Make line numbers default
 vim.o.number = true
