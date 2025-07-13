@@ -97,6 +97,28 @@ vim.g.have_nerd_font = false
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
+--
+-- #### mwilson options begin ####
+vim.o.expandtab = true
+vim.o.shiftwidth = 2
+vim.o.smartindent = true
+vim.filetype.add { extension = { wf = 'json' } }
+
+vim.api.nvim_create_user_command('SudoW', function()
+  vim.cmd 'silent! w !sudo tee % > /dev/null'
+  vim.cmd 'edit!'
+end, {})
+
+vim.api.nvim_create_user_command('SudoWq', function()
+  vim.cmd 'silent! w !sudo tee % > /dev/null'
+  vim.cmd 'edit!'
+  vim.cmd 'q!'
+end, {})
+
+vim.api.nvim_set_keymap('c', 'w!!', '<esc>:SudoW<CR>', { silent = true, noremap = true })
+
+vim.api.nvim_set_keymap('c', 'wq!!', '<esc>:SudoWq<CR>', { silent = true, noremap = true })
+-- #### mwilson options end ####
 
 -- Make line numbers default
 vim.o.number = true
@@ -246,6 +268,9 @@ rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
+  -- Begin martin plugins
+  'mfussenegger/nvim-ansible',
+  -- End martin plugins
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
 
@@ -671,6 +696,8 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        ansiblels = {},
+        jsonls = {},
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -974,8 +1001,8 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
