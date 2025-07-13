@@ -99,11 +99,6 @@ vim.g.have_nerd_font = false
 --  For more options, you can see `:help option-list`
 --
 -- #### mwilson options begin ####
-vim.o.expandtab = true
-vim.o.shiftwidth = 2
-vim.o.smartindent = true
-vim.filetype.add { extension = { wf = 'json' } }
-
 vim.api.nvim_create_user_command('SudoW', function()
   vim.cmd 'silent! w !sudo tee % > /dev/null'
   vim.cmd 'edit!'
@@ -1001,8 +996,8 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  require 'kickstart.plugins.indent_line',
-  require 'kickstart.plugins.lint',
+  -- require 'kickstart.plugins.indent_line',
+  -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
