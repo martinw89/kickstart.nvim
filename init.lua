@@ -99,11 +99,6 @@ vim.g.have_nerd_font = false
 --  For more options, you can see `:help option-list`
 --
 -- #### mwilson options begin ####
-vim.o.expandtab = true
-vim.o.shiftwidth = 2
-vim.o.smartindent = true
-vim.filetype.add { extension = { wf = 'json' } }
-
 vim.api.nvim_create_user_command('SudoW', function()
   vim.cmd 'silent! w !sudo tee % > /dev/null'
   vim.cmd 'edit!'
@@ -696,6 +691,7 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        -- Martin NOTE: Ansible and jsonls require node to be installed on system
         ansiblels = {},
         jsonls = {},
         -- clangd = {},
@@ -877,7 +873,7 @@ require('lazy').setup({
       completion = {
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        documentation = { auto_show = true, auto_show_delay_ms = 1000 },
       },
 
       sources = {
@@ -1001,8 +997,8 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  require 'kickstart.plugins.indent_line',
-  require 'kickstart.plugins.lint',
+  -- require 'kickstart.plugins.indent_line',
+  -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
