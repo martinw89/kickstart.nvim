@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -103,6 +103,21 @@ vim.o.expandtab = true
 vim.o.shiftwidth = 2
 vim.o.smartindent = true
 vim.filetype.add { extension = { wf = 'json' } }
+
+-- When editing a file, always jump to the last known cursor position.
+-- Don't do it when the position is invalid, when inside an event handler
+-- (happens when dropping a file on gvim) and for a commit message (it's
+-- likely a different one than last time).
+vim.api.nvim_create_autocmd('BufReadPost', {
+  callback = function(args)
+    local valid_line = vim.fn.line [['"]] >= 1 and vim.fn.line [['"]] < vim.fn.line '$'
+    local not_commit = vim.b[args.buf].filetype ~= 'commit'
+
+    if valid_line and not_commit then
+      vim.cmd [[normal! g`"]]
+    end
+  end,
+})
 
 vim.api.nvim_create_user_command('SudoW', function()
   vim.cmd 'silent! w !sudo tee % > /dev/null'
@@ -270,6 +285,7 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- Begin martin plugins
   'mfussenegger/nvim-ansible',
+  'mfussenegger/nvim-jdtls',
   -- End martin plugins
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
@@ -698,9 +714,20 @@ require('lazy').setup({
       local servers = {
         ansiblels = {},
         jsonls = {},
+        lemminx = {
+          cmd = 'HTTP_PROXY_HOST=http://proxygov.ray.com HTTP_PROXY_PORT=80 lemminx',
+          settings = {
+            Lua = {
+              http = {
+                proxy = 'http://proxygov.ray.com:80',
+              },
+            },
+          },
+        },
+        protols = {},
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -721,7 +748,7 @@ require('lazy').setup({
                 callSnippet = 'Replace',
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
+              diagnostics = { disable = { 'missing-fields' } },
             },
           },
         },
@@ -746,6 +773,8 @@ require('lazy').setup({
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+      local lspconfig = require 'lspconfig'
+
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
@@ -759,6 +788,12 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
         },
+      }
+
+      lspconfig.lemminx.setup {
+        capabilities = vim.tbl_deep_extend('force', {}, capabilities, servers['lemminx'].capabilities or {}),
+        cmd = servers['lemminx'].cmd,
+        settings = servers['lemminx'].settings,
       }
     end,
   },
@@ -921,7 +956,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'unokai'
     end,
   },
 
@@ -979,9 +1014,9 @@ require('lazy').setup({
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
+        additional_vim_regex_highlighting = { 'ruby', 'python' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
+      indent = { enable = true, disable = { 'ruby', 'python' } },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
