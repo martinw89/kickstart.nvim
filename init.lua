@@ -294,8 +294,8 @@ require('lazy').setup({
   { 'NMAC427/guess-indent.nvim', opts = {} },
 
   -- Begin martin plugins
-  -- { 'mfussenegger/nvim-ansible.nvim', opts = {} },
-  -- { 'mfussenegger/nvim-jdtls.nvim', opts = {} },
+  { 'mfussenegger/nvim-ansible' },
+  -- { 'mfussenegger/nvim-jdtls', opts = {} },
   -- End martin plugins
 
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
@@ -521,6 +521,7 @@ require('lazy').setup({
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
       { 'mason-org/mason.nvim', opts = {} },
+      { 'mason-org/mason-lspconfig.nvim', opts = {} },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -633,6 +634,15 @@ require('lazy').setup({
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --  See `:help lsp-config` for information about keys and how to configure
       local servers = {
+
+        -- martin mwilson lsp servers start --
+        ansiblels = {},
+        jsonls = {},
+        lemminx = {},
+        rust_analyzer = {},
+        yamlls = {},
+        -- martin mwilson lsp servers end --
+
         -- clangd = {},
         -- gopls = {},
         pyright = {},
