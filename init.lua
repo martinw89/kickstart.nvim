@@ -293,10 +293,17 @@ require('lazy').setup({
   -- NOTE: Plugins can be added via a link or github org/name. To run setup automatically, use `opts = {}`
   { 'NMAC427/guess-indent.nvim', opts = {} },
 
-  -- Begin martin plugins
+  -- Begin martin mwilson plugins
   { 'mfussenegger/nvim-ansible' },
   -- { 'mfussenegger/nvim-jdtls', opts = {} },
-  -- End martin plugins
+  {
+    'iamcco/markdown-preview.nvim',
+    cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
+    build = 'cd app && yarn install',
+    init = function() vim.g.mkdp_filetypes = { 'markdown' } end,
+    ft = { 'markdown' },
+  },
+  -- End martin mwilson plugins
 
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
@@ -857,7 +864,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'unokai'
+      vim.cmd.colorscheme 'tokyonight-night'
     end,
   },
 
